@@ -58,7 +58,7 @@ class OtpController extends Controller
         // Update verification status and save assigned role
         $user->is_verified = true;
         $user->status = 'active';
-        $user->role = $user->role ?? 'user';
+        // $user->role = $user->role ?? 'user';
         $user->otp = null;
         $user->otp_expires_at = null;
         $user->email_verified_at = now();
@@ -84,7 +84,6 @@ class OtpController extends Controller
             'otp' => 'required|digits:6',
             'email' => 'required|email',
         ]);
-
         // Fetch user with pending status
         $user = User::where('email', $request->input('email'))
                     ->where('status', 'pending')
@@ -113,7 +112,7 @@ class OtpController extends Controller
 
         // Update user verification and status
         $user->status = 'active';
-        $user->role = $user->role ?? 'superadmin';
+        // $user->role = $user->role ?? 'superadmin';
         $user->is_verified = true;
         $user->otp = null;
         $user->otp_expires_at = null;

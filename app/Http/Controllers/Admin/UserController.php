@@ -37,7 +37,7 @@ class UserController extends Controller
 
         // Handle sorting
         $sortColumn = $request->get('sort', 'id');
-        $sortDirection = $request->get('direction', 'asc');
+        $sortDirection = $request->get('direction', 'desc');
         
         // Validate sort column to prevent SQL injection
         $allowedColumns = ['id', 'first_name', 'last_name', 'email', 'gender', 'dob'];
@@ -159,7 +159,27 @@ class UserController extends Controller
             $request->role !== 'superadmin' &&
             (!$user->hasRole('superadmin') || $currentUser->hasRole('superadmin'))
         ) {
-            $user->syncRoles($request->role);
+            $desiredRole = $request->role;
+        
+            // Check if user already has this role
+            if (!$user->hasRole($desiredRole)) {
+                // Determine correct guard
+                $guard = in_array($desiredRole, ['user']) ? 'web' : 'admin';
+        
+                // Fetch role under that guard
+                $role = Role::where('name', $desiredRole)->where('guard_name', $guard)->first();
+        
+                if (!$role) {
+                    return back()->withErrors(['role' => "Role '{$desiredRole}' does not exist for guard '{$guard}'."]);
+                }
+        
+                // Before assigning, check the guard compatibility of the user
+                if ($user->guard_name !== $guard) {
+                    return back()->withErrors(['role' => "User must be under '{$guard}' guard to assign this role."]);
+                }
+        
+                $user->syncRoles([$role]);
+            }
         }
 
         return redirect()->route('admin.list-users')->with('success', 'User updated successfully.');

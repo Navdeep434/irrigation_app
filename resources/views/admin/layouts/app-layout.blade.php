@@ -126,7 +126,7 @@
                 <div class="icon-circle me-3">
                     <i class="fas fa-user-shield"></i>
                 </div>
-                <h5 class="mb-0 text-white">ADMIN PANEL</h5>
+                <h5 class="mb-0 text-white">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h5>
             </div>
 
             <ul class="nav flex-column gap-2">
@@ -174,7 +174,11 @@
             <a href="/admin/profile">
                 <i class="fas fa-user-circle"></i> Profile
             </a>
-            <a href="/logout">
+            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+            
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </div>

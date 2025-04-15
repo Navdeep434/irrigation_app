@@ -66,13 +66,17 @@
         </div>
 
         <!-- Profile Section -->
-        <div class="sidebar-footer">
-            <a href="/profile">Profile</a>
-            <a href="/settings">Settings</a>
-            <form method="POST" action="{{ route('admin.logout') }}">
+        <div class="profile-logout">
+            <a href="/admin/profile">
+                <i class="fas fa-user-circle"></i> Profile
+            </a>
+            <form id="logout-form" action="{{ route('user.logout') }}" method="POST" style="display: none;">
                 @csrf
-                <button type="submit">Logout</button>
             </form>
+            
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
         </div>
     </div>
 

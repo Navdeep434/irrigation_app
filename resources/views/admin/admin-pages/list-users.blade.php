@@ -40,7 +40,7 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered glass-table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -50,6 +50,7 @@
                         <th class="sortable" data-column="gender">Gender <i class="sort-icon fa fa-sort"></i></th>
                         <th class="sortable" data-column="dob">Date of Birth <i class="sort-icon fa fa-sort"></i></th>
                         <th>Role</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -67,6 +68,7 @@
                                     <span class="badge bg-primary">{{ $role->name }}</span>
                                 @endforeach
                             </td>
+                            <td><span class="badge bg-primary">{{ $user->status }}</span></td>
                             <td>
                                 <a href="{{ route('admin.edit-user', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
@@ -145,7 +147,48 @@
         .fa-sort-up, .fa-sort-down {
             color: #007bff;
         }
+        .glass-table {
+            background: rgba(255, 255, 255, 0.15);
+            /* border-radius: 1rem; */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.164);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+    
+        .glass-table thead th {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #000;
+        }
+    
+        .glass-table tbody tr {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #000;
+        }
+    
+        .glass-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1rem;
+        }
+    
+        .modal-content.glass-modal {
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+    
+        /* Optional for overall background */
+        body {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            background-attachment: fixed;
+        }
     </style>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -198,10 +241,10 @@
                         if (response.success) {
                             $('#user-row-' + userId).addClass('table-success');
                             verifyModal.hide();
-                            alert(response.message);
-                            location.reload(); // Reload the page to update the button state
+                            // alert(response.message);
+                            location.reload();
                         } else {
-                            alert('Action failed!');
+                            // alert('Action failed!');
                         }
                     },
                     error: function (xhr) {
