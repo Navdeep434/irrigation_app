@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container mt-4">
-        <h2>Create User</h2>
+        <h2 class="custom-header py-1 px-3 mb-4">Create User</h2>
         <hr> <!-- Horizontal line below the title -->
 
         <!-- Success or Error Message -->
@@ -127,5 +127,14 @@
             backdrop-filter: blur(8px); /* apply blur effect */
             border-radius: 10px;
         }
+        .custom-header {
+            /* border-left: 4px solid #ffffff;
+            border-top: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff; */
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            color: #000;
+            border-radius: 10px;
+        }
+
     </style>
 @endsection

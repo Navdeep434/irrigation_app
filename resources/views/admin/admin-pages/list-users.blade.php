@@ -2,8 +2,8 @@
 @section('page-title', 'User List | Smart Irrigation')
 @section('content')
     <div class="container">
-        <h3 class="mb-4">Users List</h3>
-
+        <h3 class="custom-header py-1 px-3 mb-4">Users List</h3>
+        <hr>
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -38,7 +38,7 @@
                 </a>
             </div>
         </div>
-
+        <hr>
         <div class="table-responsive">
             <table class="table table-bordered glass-table">
                 <thead>
@@ -186,6 +186,14 @@
         body {
             background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
             background-attachment: fixed;
+        }
+        .custom-header {
+            /* border-left: 4px solid #ffffff;
+            border-top: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff; */
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            color: #000;
+            border-radius: 10px;
         }
     </style>
     

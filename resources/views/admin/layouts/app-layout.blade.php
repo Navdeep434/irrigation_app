@@ -89,6 +89,7 @@
             border-radius: 8px;
             transition: all 0.3s ease;
             font-size: 15px;
+            text-decoration: none;
         }
 
         .profile-logout a:hover {
