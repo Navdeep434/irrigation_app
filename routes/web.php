@@ -46,16 +46,21 @@ Route::prefix('admin')->name('admin.')->middleware('guest:admin')->group(functio
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
     Route::post('/logout', [AdminAuth::class, 'logout'])->name('logout');
 
-    // Protected Admin Routes (Superadmin/Admin/Technician roles)
+    // Routes for superadmin, admin, technician
     Route::middleware('role:superadmin|admin|technician')->get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
-    // User Management Routes
-    Route::middleware('role:superadmin')->get('/create-user', [UserController::class, 'create'])->name('createUser');
-    Route::middleware('role:superadmin')->post('/create-user', [UserController::class, 'store'])->name('store-user');
-    Route::middleware('role:superadmin')->get('/list-users', [UserController::class, 'index'])->name('list-users');
-    Route::middleware('role:superadmin')->get('/edit-user/{id}', [UserController::class, 'edit'])->name('edit-user');
-    Route::middleware('role:superadmin')->post('/update-user/{id}', [UserController::class, 'update'])->name('update-user');
-    Route::middleware('role:superadmin')->delete('/delete-user/{id}', [UserController::class, 'destroy'])->name('delete-user');
+    // Routes for superadmin only
+    Route::middleware('role:superadmin')->group(function () {
+        Route::get('/create-user', [UserController::class, 'create'])->name('create-user');
+        Route::post('/create-user', [UserController::class, 'store'])->name('store-user');
+        Route::get('/list-users', [UserController::class, 'index'])->name('list-users');
+        Route::get('/edit-user/{id}', [UserController::class, 'edit'])->name('edit-user');
+        Route::post('/update-user/{id}', [UserController::class, 'update'])->name('update-user');
+        Route::delete('/delete-user/{id}', [UserController::class, 'destroy'])->name('delete-user');
+    });
+
+    // Route accessible by both admin and superadmin
+    Route::middleware('role:superadmin|admin')->post('/verify-user/{id}', [UserController::class, 'verifyUser'])->name('verify-user');
 });
 
 Route::get('/admin/verify-otp', [OtpController::class, 'showAdminOtpForm'])->name('admin.verifyOtp');

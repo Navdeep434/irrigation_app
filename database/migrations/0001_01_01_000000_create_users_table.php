@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();
             $table->boolean('is_verified')->default(false);
-            $table->string('role')->nullable()->default(null);
+            // $table->string('role')->nullable()->default(null);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

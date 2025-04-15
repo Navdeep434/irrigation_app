@@ -111,10 +111,6 @@ class OtpController extends Controller
             ]);
         }
 
-        // Assign role
-        $role = Role::firstOrCreate(['name' => 'superadmin', 'guard_name' => 'web']);
-        $user->assignRole($role);
-
         // Update user verification and status
         $user->status = 'active';
         $user->role = $user->role ?? 'superadmin';

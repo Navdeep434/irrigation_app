@@ -1,6 +1,6 @@
 @extends('admin.layouts.app-layout') 
 
-@section('page-title', 'Dashboard | Smart Irrigation')
+@section('page-title', 'Admin Dashboard | Smart Irrigation')
 
 @section('content')
 <main class="p-4">

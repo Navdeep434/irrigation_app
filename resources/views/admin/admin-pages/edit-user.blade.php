@@ -1,5 +1,5 @@
 @extends('admin.layouts.app-layout')
-@section('page-title', 'Create User | Smart Irrigation')
+@section('page-title', 'Edit User | Smart Irrigation')
 @section('content')
     <div class="container">
         <h3 class="mb-4">Edit User</h3>
@@ -61,6 +61,20 @@
                 <label for="password_confirmation" class="form-label">Confirm Password</label>
                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
             </div>
+
+            <!-- Show Role Dropdown Only If User is Not a Superadmin -->
+            @if(!$user->hasRole('superadmin'))
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select name="role" class="form-control" required>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->name }}" {{ old('role', $user->getRoleNames()->first()) == $role->name ? 'selected' : '' }}>
+                                {{ ucfirst($role->name) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
 
             <button type="submit" class="btn btn-primary">Update User</button>
         </form>

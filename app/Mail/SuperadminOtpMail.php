@@ -19,7 +19,7 @@ class SuperadminOtpMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $otp, $ownerName)
+    public function __construct($user, $otp, $ownerName = null)
     {
         $this->user = $user;
         $this->otp = $otp;

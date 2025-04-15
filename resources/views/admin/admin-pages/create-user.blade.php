@@ -3,9 +3,12 @@
 @section('content')
     <div class="container">
         <h2>Create User</h2>
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+        @if(session('success') || session('message'))
+            <div class="alert alert-success">
+                {{ session('success') ?? session('message') }}
+            </div>
         @endif
+
         
         <form action="{{ route('admin.store-user') }}" method="POST">
             @csrf
@@ -77,10 +80,9 @@
             <!-- Role -->
             <div class="mb-3">
                 <label for="role" class="form-label">Role</label>
-                <select class="form-select" id="role" name="role" required>
-                    <option value="">Select Role</option>
+                <select name="role" class="form-control" required>
                     @foreach($roles as $role)
-                        <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>{{ ucfirst($role->name) }}</option>
+                        <option value="{{ $role->name }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
                 @error('role')

@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Mail\SuperadminOtpMail;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+
 
 class AuthController extends Controller
 {
@@ -27,36 +30,44 @@ class AuthController extends Controller
             'password'   => 'required|string|min:8|confirmed',
         ]);
 
-        $otp = rand(100000, 999999);
-        $otpExpiration = now()->addMinutes(5);
-        $ownerEmail = config('app.owner_email');
-        $ownerName = config('app.owner_name');
-
-        $user = new User([
-            'first_name'     => $validated['first_name'],
-            'last_name'      => $validated['last_name'],
-            'email'          => $validated['email'],
-            'gender'         => $validated['gender'],
-            'dob'            => $validated['dob'],
-            'password'       => bcrypt($validated['password']),
-            'status'         => 'pending',
-            'otp'            => $otp,
-            'otp_expires_at' => $otpExpiration,
-        ]);
-
-        $user->save();
-
-        // Assign superadmin role
-        $user->assignRole('superadmin');
+        DB::beginTransaction();
 
         try {
-            Mail::to($ownerEmail)->send(new SuperadminOtpMail($validated, $otp , $ownerName));
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['email' => 'Failed to send OTP email. Please try again later.']);
-        }
+            $otp = rand(100000, 999999);
+            $otpExpiration = now()->addMinutes(5);
+            $ownerEmail = config('app.owner_email');
+            $ownerName = config('app.owner_name');
 
-        return redirect()->route('admin.verifyOtp')->with('message', 'OTP has been sent to the owner for verification.');
+            $user = new User([
+                'first_name'     => $validated['first_name'],
+                'last_name'      => $validated['last_name'],
+                'email'          => $validated['email'],
+                'gender'         => $validated['gender'],
+                'dob'            => $validated['dob'],
+                'password'       => bcrypt($validated['password']),
+                'status'         => 'pending',
+                'otp'            => $otp,
+                'otp_expires_at' => $otpExpiration,
+            ]);
+
+            $user->save();
+
+            // Assign superadmin role
+            $user->assignRole(Role::findByName('superadmin', 'admin'));
+
+            // Send email
+            Mail::to($ownerEmail)->send(new SuperadminOtpMail($validated, $otp , $ownerName));
+
+            DB::commit();
+
+            return redirect()->route('admin.verifyOtp')->with('message', 'OTP has been sent to the owner for verification.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->withErrors(['error' => 'Something went wrong. Please try again.']);
+        }
     }
+
 
     public function showLogin()
     {
