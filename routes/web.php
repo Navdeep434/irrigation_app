@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\DashboardController as WebDashboard;
 use App\Http\Controllers\Admin\AuthController as AdminAuth;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\Admin\UserController;
 
 // =======================
 // User Routes
@@ -47,6 +48,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 
     // Protected Admin Routes (Superadmin/Admin/Technician roles)
     Route::middleware('role:superadmin|admin|technician')->get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+
+    // User Management Routes
+    Route::middleware('role:superadmin')->get('/create-user', [UserController::class, 'create'])->name('createUser');
+    Route::middleware('role:superadmin')->post('/create-user', [UserController::class, 'store'])->name('store-user');
+    Route::middleware('role:superadmin')->get('/list-users', [UserController::class, 'index'])->name('list-users');
+    Route::middleware('role:superadmin')->get('/edit-user/{id}', [UserController::class, 'edit'])->name('edit-user');
+    Route::middleware('role:superadmin')->post('/update-user/{id}', [UserController::class, 'update'])->name('update-user');
+    Route::middleware('role:superadmin')->delete('/delete-user/{id}', [UserController::class, 'destroy'])->name('delete-user');
 });
 
 Route::get('/admin/verify-otp', [OtpController::class, 'showAdminOtpForm'])->name('admin.verifyOtp');
