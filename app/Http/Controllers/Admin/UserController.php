@@ -73,10 +73,13 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'country_code' => 'required|regex:/^\+[0-9]{1,5}$/',
+            'contact_number' => 'required|digits_between:5,15',
             'gender' => 'required|string|in:male,female,other',
             'dob' => 'required|date',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|exists:roles,name',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validated['role'] === 'superadmin') {
@@ -88,6 +91,7 @@ class UserController extends Controller
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
+            'contact_number' => $validated['contact_number'],
             'gender' => $validated['gender'],
             'dob' => $validated['dob'],
             'password' => Hash::make($validated['password']),
@@ -130,10 +134,13 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $id,
+            'country_code' => 'required|regex:/^\+[0-9]{1,5}$/',
+            'contact_number' => 'required|digits_between:5,15',
             'gender'     => 'required|string|in:male,female,other',
             'dob'        => 'required|date',
             'password'   => 'nullable|string|min:8|confirmed',
             'role'       => 'nullable|exists:roles,name',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Prevent updating anyone's role to superadmin
@@ -145,6 +152,7 @@ class UserController extends Controller
         $user->first_name = $validated['first_name'];
         $user->last_name  = $validated['last_name'];
         $user->email      = $validated['email'];
+        $user->contact_number = $validated['contact_number'];
         $user->gender     = $validated['gender'];
         $user->dob        = $validated['dob'];
 

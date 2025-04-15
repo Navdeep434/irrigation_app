@@ -68,6 +68,13 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="contact_number" class="form-label">Contact Number</label>
+                            <input type="text" name="contact_number" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <!-- Role -->
                         <div class="col-md-4 mb-3">
                             <label for="role" class="form-label">Role</label>
@@ -80,9 +87,7 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
 
-                    <div class="row">
                         <!-- Password and Confirm Password -->
                         <div class="col-md-4 mb-3">
                             <label for="password" class="form-label">Password</label>

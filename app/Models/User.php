@@ -21,6 +21,8 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'country_code',
+        'contact_number',
         'password',
         'status',
         'otp',
@@ -28,6 +30,7 @@ class User extends Authenticatable
         'gender',
         'dob',
         'role',
+        'profile_image',
     ];
 
     /**

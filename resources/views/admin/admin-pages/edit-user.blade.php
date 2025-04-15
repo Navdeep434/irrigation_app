@@ -4,7 +4,8 @@
 
 @section('content')
     <div class="container mt-4">
-        <h3 class="mb-4">Edit User</h3>
+        <h3 class="custom-header py-1 px-3 mb-4">Edit User</h3>
+        <hr>
 
         <!-- Show Success or Error Message -->
         @if(session('success'))
@@ -62,6 +63,13 @@
                             <input type="date" class="form-control" id="dob" name="dob" value="{{ old('dob', $user->dob) }}" required>
                         </div>
 
+                        <div class="col-md-4 mb-3">
+                            <label for="contact_number" class="form-label">Contact Number</label>
+                            <input type="contact_number" class="form-control" id="contact_number" name="contact_number" value="{{ old('contact_number', $user->contact_number) }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <!-- Show Role Dropdown Only If User is Not a Superadmin -->
                         @if(!$user->hasRole('superadmin'))
                             <div class="col-md-4 mb-3">
@@ -75,9 +83,6 @@
                                 </select>
                             </div>
                         @endif
-                    </div>
-
-                    <div class="row">
                         <!-- Password and Confirm Password -->
                         <div class="col-md-4 mb-3">
                             <label for="password" class="form-label">Password (Leave blank to keep unchanged)</label>
@@ -124,6 +129,14 @@
         /* Optional: Adjust form inputs */
         .form-control {
             background-color: rgba(255, 255, 255, 0.7); /* Add some transparency to the inputs */
+        }
+        .custom-header {
+            /* border-left: 4px solid #ffffff;
+            border-top: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff; */
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            color: #000;
+            border-radius: 10px;
         }
     </style>
 @endsection

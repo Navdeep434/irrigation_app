@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('country_code', 5)->nullable();
+            $table->string('contact_number', 15)->nullable();
             $table->string('password');
             $table->string('status')->default('pending');
             $table->string('otp')->nullable();
@@ -24,6 +26,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();
             $table->boolean('is_verified')->default(false);
+            $table->string('profile_image')->nullable();
             // $table->string('role')->nullable()->default(null);
             $table->rememberToken();
             $table->timestamps();

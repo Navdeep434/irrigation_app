@@ -25,9 +25,12 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email',
+            'country_code' => 'required|string|max:5',
+            'contact_number' => 'required|digits_between:5,15',
             'gender'     => 'required|string|in:male,female,other',
             'dob'        => 'required|date',
             'password'   => 'required|string|min:8|confirmed',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         DB::beginTransaction();
@@ -38,16 +41,36 @@ class AuthController extends Controller
             $ownerEmail = config('app.owner_email');
             $ownerName = config('app.owner_name');
 
+            // Handle profile image upload with unique name
+            $profileImagePath = null;
+            if ($request->hasFile('profile_image')) {
+                $file = $request->file('profile_image');
+                
+                $ext = $file->getClientOriginalExtension();
+                $filename = 'profile_' . time() . '_' . uniqid() . '.' . $ext;
+                
+                // Make sure the directory exists
+                if (!file_exists(storage_path('app/public/profiles'))) {
+                    mkdir(storage_path('app/public/profiles'), 0777, true);
+                }
+                
+                $profileImagePath = $file->storeAs('profiles', $filename, 'public');
+                
+            }
+            // dd($profileImagePath);
             $user = new User([
                 'first_name'     => $validated['first_name'],
                 'last_name'      => $validated['last_name'],
                 'email'          => $validated['email'],
+                'country_code'   => $validated['country_code'],
+                'contact_number'  => $validated['contact_number'],
                 'gender'         => $validated['gender'],
                 'dob'            => $validated['dob'],
                 'password'       => bcrypt($validated['password']),
                 'status'         => 'pending',
                 'otp'            => $otp,
                 'otp_expires_at' => $otpExpiration,
+                'profile_image'   => $profileImagePath,
             ]);
 
             $user->save();

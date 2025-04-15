@@ -3,9 +3,19 @@
 @section('page-title', 'Admin Dashboard | Smart Irrigation')
 
 @section('content')
+<style>
+    .custom-header {
+            /* border-left: 4px solid #ffffff;
+            border-top: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff; */
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            color: #000;
+            border-radius: 5px;
+        }
+</style>
 <main class="p-4">
-    <h2 class="mb-4">Welcome, {{ $user->first_name }}!</h2>
-
+    <h2 class="custom-header py-1 px-3 mb-4">Welcome, {{ $user->first_name }}!</h2>
+    <hr>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
         <div class="col">
             <div class="card shadow-sm border-0">
@@ -52,5 +62,6 @@
             </div>
         </div>
     </div>
+    <hr>
 </main>
 @endsection

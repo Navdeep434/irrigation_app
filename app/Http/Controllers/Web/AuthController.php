@@ -24,26 +24,41 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'country_code' => 'required|regex:/^\+[0-9]{1,5}$/',
+            'contact_number' => 'required|digits_between:5,15',
             'gender' => 'required|string|in:male,female,other',
             'dob' => 'required|date',
             'password' => 'required|string|min:8|confirmed',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Generate OTP
         $otp = rand(100000, 999999);
         $otpExpiration = now()->addMinutes(5);
 
+        // Handle profile image upload with unique name
+        $profileImagePath = null;
+        if ($request->hasFile('profile_image')) {
+            $file      = $request->file('profile_image');
+            $ext       = $file->getClientOriginalExtension();
+            $filename  = 'profile_' . time() . '_' . uniqid() . '.' . $ext; // Unique filename
+            $profileImagePath = $file->storeAs('profiles', $filename, 'public');
+        }
+
         // Create user
         $user = new User([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
+            'country_code' => $request->input('country_code'),
+            'contact_number'  => $validated['contact_number'],
             'gender' => $request->input('gender'),
             'dob' => $request->input('dob'),
             'password' => bcrypt($request->input('password')),
             'status' => 'pending',
             'otp' => $otp,
             'otp_expires_at' => $otpExpiration,
+            'profile_image' => $profileImagePath,
         ]);
 
         $user->save();

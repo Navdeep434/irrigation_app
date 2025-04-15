@@ -3,6 +3,16 @@
 @section('page-title', 'Signup | Smart Irrigation')
 
 @section('content')
+    <style>
+        .file-input-compact {
+            padding: 0.25rem 0.5rem;
+        }
+        
+        /* For even more compact file inputs */
+        .file-input-very-compact {
+            padding: 0.125rem 0.25rem;
+        }
+    </style>
     <main class="auth-wrapper">
         <div class="auth-card shadow">
             <h2 class="text-center">Create an account</h2>
@@ -41,7 +51,22 @@
                     <label class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" required>
                 </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Contact Number</label>
+                    <div class="input-group">
+                        <span class="input-group-text">+</span>
+                        <input type="text" name="country_code" class="form-control" placeholder="Code" style="max-width: 80px;" required>
+                        <input type="text" name="contact_number" class="form-control" placeholder="Phone number" required>
+                    </div>
+                    <div class="form-text">Example: +1 for US/Canada, +44 for UK, +91 for India</div>
+                </div>
 
+                <div class="mb-3">
+                    <label for="profile_image" class="form-label">Profile Image</label>
+                    <input type="file" name="profile_image" id="profile_image" class="form-control file-input-compact">
+                </div>
+                
                 <div class="mb-3">
                     <label class="form-label">Gender</label>
                     <select name="gender" class="form-select" required>
