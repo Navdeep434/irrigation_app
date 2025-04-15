@@ -1,0 +1,217 @@
+/* Smart Irrigation Authentication Styles */
+body {
+    background: #000 url('/images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-header {
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    /* background: rgba(255, 255, 255, 0.1); */
+    background-color: rgba(15, 15, 30, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.auth-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+    color: #216701;
+}
+
+.leaf-icon {
+    width: 24px;
+    height: 24px;
+    fill: #216701;
+}
+
+.auth-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 15px;
+}
+
+.auth-card {
+    background-color: rgba(15, 15, 30, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid rgba(60, 60, 90, 0.3);
+}
+
+.auth-card h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem;
+    border-radius: 8px;
+    background-color: rgba(30, 30, 45, 0.8);
+    border: 1px solid rgba(80, 80, 120, 0.4);
+    color: white;
+    font-weight: 500;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.social-button:hover {
+    background-color: rgba(40, 40, 60, 0.8);
+}
+
+.social-button i {
+    font-size: 1.25rem;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: #aaa;
+}
+
+.divider:before, .divider:after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid rgba(150, 150, 180, 0.3);
+}
+
+.divider span {
+    padding: 0 1rem;
+}
+
+.form-label {
+    color: #eee;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    background-color: rgba(30, 30, 45, 0.6);
+    border: 1px solid rgba(80, 80, 120, 0.4);
+    border-radius: 8px;
+    color: white;
+    padding: 0.7rem 1rem;
+}
+
+.form-control:focus {
+    background-color: rgba(40, 40, 60, 0.6);
+    border-color: rgba(100, 100, 200, 0.6);
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgba(80, 100, 255, 0.25);
+}
+
+.form-control::placeholder,
+.form-select::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-control:focus::placeholder,
+.form-select:focus::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.form-select {
+    background-color: rgba(30, 30, 45, 0.6);
+    border: 1px solid rgba(80, 80, 120, 0.4);
+    color: white;
+}
+
+.form-select:focus {
+    background-color: rgba(40, 40, 60, 0.6);
+    border-color: rgba(100, 100, 200, 0.6);
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgba(80, 100, 255, 0.25);
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-row > div {
+    flex: 1;
+}
+
+.text-info {
+    color: #2563eb !important;
+    text-decoration: none;
+}
+
+.text-info:hover {
+    text-decoration: underline;
+}
+
+.forgot-link {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.forgot-link a {
+    color: #2563eb;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.forgot-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .auth-card {
+        padding: 1.5rem;
+    }
+}
