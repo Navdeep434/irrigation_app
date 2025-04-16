@@ -152,6 +152,7 @@ class UserController extends Controller
         $user->first_name = $validated['first_name'];
         $user->last_name  = $validated['last_name'];
         $user->email      = $validated['email'];
+        $user->country_code = '+' . $validated['country_code'];
         $user->contact_number = $validated['contact_number'];
         $user->gender     = $validated['gender'];
         $user->dob        = $validated['dob'];
@@ -196,16 +197,17 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        // Prevent deleting currently logged-in admin
-        if (auth('admin')->id() == $id) {
-            return redirect()->route('admin.users')->with('error', 'You cannot delete your own account.');
+        $user = User::findOrFail($id);
+
+        if (auth('admin')->id() === $user->id) {
+            return back()->with('error', 'You cannot delete your own account.');
         }
 
-        $user = User::findOrFail($id);
-        $user->delete();
+        $user->delete(); // Soft delete
 
-        return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.user-list')->with('success', 'User deleted successfully.');
     }
+
 
     public function verifyUser(Request $request, $id)
     {

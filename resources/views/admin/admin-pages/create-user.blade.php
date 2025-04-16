@@ -4,7 +4,15 @@
 
 @section('content')
     <div class="container mt-4">
-        <h2 class="custom-header py-1 px-3 mb-4">Create User</h2>
+        <div class="row align-items-center mb-3">
+            <div class="col-auto ">
+                <a href="{{ url()->previous() }}" class="btn custom-header">
+                    <i class="fa fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+        <hr>
+        <h2 class="custom-header py-1 px-3 mb-3">Create User</h2>
         <hr> <!-- Horizontal line below the title -->
 
         <!-- Success or Error Message -->
@@ -68,9 +76,19 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                        <!-- Contact Number with Country Code -->
                         <div class="col-md-4 mb-3">
                             <label for="contact_number" class="form-label">Contact Number</label>
-                            <input type="text" name="contact_number" class="form-control" required>
+                            <div class="input-group">
+                                <input type="text" name="country_code" class="form-control" placeholder="+xx" value="{{ old('country_code', '+') }}" required>
+                                <input type="text" name="contact_number" class="form-control" value="{{ old('contact_number') }}" placeholder="Phone number" required>
+                            </div>
+                            @error('country_code')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            @error('contact_number')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -109,37 +127,4 @@
         </div>
     </div>
 
-    <style>
-        /* Glass Effect for Card */
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.3); /* semi-transparent background */
-            backdrop-filter: blur(10px); /* blur the background */
-            border-radius: 10px; /* rounded corners */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
-            padding: 20px;
-        }
-
-        /* Optional: Adding shadow effect for better visibility */
-        .glass-effect .card-header {
-            background: rgba(255, 255, 255, 0); /* light header background */
-            backdrop-filter: blur(10px); /* apply blur effect */
-            border-radius: 10px;
-        }
-
-        /* Optional: Add some extra style to the card body */
-        .glass-effect .card-body {
-            background: rgba(255, 255, 255, 0); /* light background for card body */
-            backdrop-filter: blur(8px); /* apply blur effect */
-            border-radius: 10px;
-        }
-        .custom-header {
-            /* border-left: 4px solid #ffffff;
-            border-top: 1px solid #ffffff;
-            border-bottom: 1px solid #ffffff; */
-            background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-            color: #000;
-            border-radius: 10px;
-        }
-
-    </style>
 @endsection

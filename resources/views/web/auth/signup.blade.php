@@ -32,7 +32,7 @@
                 <span>Or</span>
             </div>
 
-            <form id="signupForm">
+            <form id="signupForm" method="POST" action="{{ route('user.signup.post') }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -123,10 +123,14 @@
                 e.preventDefault();
                 $('#loader').removeClass('d-none');
 
+                const formData = new FormData(this);
+
                 $.ajax({
                     url: '{{ route("user.signup.post") }}',
                     type: 'POST',
-                    data: $('#signupForm').serialize(),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },

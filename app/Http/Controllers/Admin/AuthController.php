@@ -25,12 +25,12 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email',
-            'country_code' => 'required|string|max:5',
+            'country_code' => 'required|regex:/^\+[0-9]{1,5}$/',
             'contact_number' => 'required|digits_between:5,15',
             'gender'     => 'required|string|in:male,female,other',
             'dob'        => 'required|date',
             'password'   => 'required|string|min:8|confirmed',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         DB::beginTransaction();
@@ -57,12 +57,12 @@ class AuthController extends Controller
                 $profileImagePath = $file->storeAs('profiles', $filename, 'public');
                 
             }
-            // dd($profileImagePath);
+            
             $user = new User([
                 'first_name'     => $validated['first_name'],
                 'last_name'      => $validated['last_name'],
                 'email'          => $validated['email'],
-                'country_code'   => $validated['country_code'],
+                'country_code' => '+' . $validated['country_code'],
                 'contact_number'  => $validated['contact_number'],
                 'gender'         => $validated['gender'],
                 'dob'            => $validated['dob'],

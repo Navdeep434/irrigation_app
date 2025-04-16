@@ -28,9 +28,9 @@ return new class extends Migration
             $table->boolean('is_verified')->default(false);
             $table->string('profile_image')->nullable();
             // $table->string('role')->nullable()->default(null);
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
-            $table->softDeletes();
         });
         
 

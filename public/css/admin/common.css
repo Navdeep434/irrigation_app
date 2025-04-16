@@ -1,0 +1,137 @@
+/* Glass Effect for Card */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.3); /* semi-transparent background */
+    backdrop-filter: blur(10px); /* blur the background */
+    border-radius: 10px; /* rounded corners */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
+    padding: 20px;
+}
+
+/* Optional: Adding shadow effect for better visibility */
+.glass-effect .card-header {
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+}
+
+/* Optional: Add some extra style to the card body */
+.glass-effect .card-body {
+    background: rgba(255, 255, 255, 0); /* light background for card body */
+    backdrop-filter: blur(8px); /* apply blur effect */
+    border-radius: 10px;
+}
+
+.sortable {
+    cursor: pointer;
+}
+
+.sort-icon {
+    margin-left: 5px;
+}
+
+.fa-sort-up, .fa-sort-down {
+    color: #007bff;
+}
+
+.glass-table {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.164);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+}
+
+.glass-table thead th {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #000;
+}
+
+.glass-table tbody tr {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #000;
+}
+
+.glass-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Glass effect for the modal */
+.glass-modal {
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Apply blur effect */
+    border-radius: 1rem; /* Rounded corners */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+}
+
+/* Optional: Glass effect for the modal header */
+.glass-header {
+    background: rgba(255, 255, 255, 0.1); /* Transparent header */
+    backdrop-filter: blur(10px);
+}
+
+/* Optional: Glass effect for the modal footer */
+.glass-footer {
+    background: rgba(255, 255, 255, 0.1); /* Transparent footer */
+    backdrop-filter: blur(10px);
+}
+
+
+.modal-content.glass-modal {
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+}
+
+/* Optional for overall background */
+body {
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    background-attachment: fixed;
+}
+
+.custom-header {
+    border-left: 0px solid #ffffff;
+    border-top: 0px solid #ffffff;
+    border-bottom: 0px solid #ffffff;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+    color: #000;
+    border-radius: 10px;
+}
+
+.glass-input {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+}
+
+.glass-input .form-control::placeholder {
+    color: rgba(18, 7, 7, 0.752); /* placeholder color */
+}
+
+/* Glass effect input and black text */
+.glass-input .form-control {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: black !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Make the select look glassy and ensure text is visible */
+.glass-input .form-select {
+    background-color: rgba(255, 255, 255, 0.1); /* Glass-like */
+    color: black;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Style the dropdown options */
+.glass-input select option {
+    color: black; /* Change this to your preferred color */
+    background-color: rgba(255, 255, 255, 0.9); /* Optional */
+}
+
+.custom-header-color {
+    background-color: #d9534f; /* Change this to your preferred color */
+    color: white;
+}
+
+.input-group input[name="country_code"] {
+    max-width: 70px;
+}
+

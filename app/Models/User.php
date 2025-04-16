@@ -11,7 +11,12 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use SoftDeletes;
 
+    // Optional: set deleted_at as a date field
+    protected $dates = ['deleted_at'];
+
+    
     /**
      * The attributes that are mass assignable.
      *

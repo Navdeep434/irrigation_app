@@ -24,12 +24,12 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'country_code' => 'required|regex:/^\+[0-9]{1,5}$/',
+            'country_code' => 'required|regex:/^[0-9]{1,5}$/',
             'contact_number' => 'required|digits_between:5,15',
             'gender' => 'required|string|in:male,female,other',
             'dob' => 'required|date',
             'password' => 'required|string|min:8|confirmed',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         // Generate OTP
@@ -39,10 +39,18 @@ class AuthController extends Controller
         // Handle profile image upload with unique name
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
-            $file      = $request->file('profile_image');
-            $ext       = $file->getClientOriginalExtension();
-            $filename  = 'profile_' . time() . '_' . uniqid() . '.' . $ext; // Unique filename
+            $file = $request->file('profile_image');
+            
+            $ext = $file->getClientOriginalExtension();
+            $filename = 'profile_' . time() . '_' . uniqid() . '.' . $ext;
+            
+            // Make sure the directory exists
+            if (!file_exists(storage_path('app/public/profiles'))) {
+                mkdir(storage_path('app/public/profiles'), 0777, true);
+            }
+            
             $profileImagePath = $file->storeAs('profiles', $filename, 'public');
+            
         }
 
         // Create user
