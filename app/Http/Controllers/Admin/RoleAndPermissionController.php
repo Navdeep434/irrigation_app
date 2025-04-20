@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 
 class RoleAndPermissionController extends Controller
@@ -184,12 +185,30 @@ class RoleAndPermissionController extends Controller
     /**
      * Get all roles and permissions for the assign view.
      */
-    public function getRolesAndPermissions()
+    public function getRolesAndPermissions(Request $request)
     {
-        $roles = Role::all();
-        $permissions = Permission::all();
+        // Specify the admin guard when retrieving roles
+        $roles = Role::where('guard_name', 'admin')->get();
+        $permissions = Permission::where('guard_name', 'admin')->get();
 
-        return view('admin.admin-pages.assign-permission', compact('roles', 'permissions'));
+        // Get selected role ID from query or null
+        $selectedRoleId = $request->input('role_id');
+
+        // Get assigned permissions if role is selected
+        $assignedPermissions = [];
+        if ($selectedRoleId) {
+            try {
+                // Specify the guard name when finding the role
+                $role = Role::findById($selectedRoleId, 'admin');
+                $assignedPermissions = $role->permissions->pluck('id')->toArray();
+            } catch (\Exception $e) {
+                // Handle case where role doesn't exist
+                return redirect()->route('admin.roles.assign.permission')
+                    ->with('error', 'Selected role does not exist.');
+            }
+        }
+
+        return view('admin.admin-pages.assign-permission', compact('roles', 'permissions', 'selectedRoleId', 'assignedPermissions'));
     }
 
     /**
@@ -203,11 +222,23 @@ class RoleAndPermissionController extends Controller
             'permissions.*' => 'exists:permissions,id',
         ]);
 
-        $role = Role::findOrFail($request->role_id);
-        $role->syncPermissions($request->permissions); // Replace with `givePermissionTo()` if needed
-
-        return back()->with('success', 'Permissions assigned successfully to the role.');
+        $roleId = $request->input('role_id');
+        $permissionIds = $request->input('permissions', []);
+        
+        try {
+            $role = Role::findById($roleId, 'admin');
+            
+            // Sync permissions with the role
+            $permissions = Permission::whereIn('id', $permissionIds)
+                ->where('guard_name', 'admin')
+                ->get();
+                
+            $role->syncPermissions($permissions);
+            
+            return redirect()->back()->with('success', 'Permissions assigned successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to assign permissions: ' . $e->getMessage());
+        }
     }
-
 
 }

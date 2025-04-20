@@ -1,57 +1,98 @@
 @extends('admin.layouts.app-layout')
 
-@section('title', 'Assign Permissions to Role')
+@section('page-title', 'Assign Permissions to Role | Smart Irrigation')
 
 @section('content')
-<div class="p-6 max-w-4xl mx-auto">
-    <div class="bg-white shadow-md rounded-2xl p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Assign Permissions to Role</h2>
+<div class="container mt-4">
+    <div class="row align-items-center mb-3">
+        <div class="col-auto">
+            <a href="{{ url()->previous() }}" class="btn custom-header">
+                <i class="fa fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+    <hr>
+    <h2 class="custom-header py-1 px-3 mb-4">Assign Permissions to Role</h2>
+    <hr>
 
-        @if (session('success'))
-            <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @elseif(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded mb-4">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="{{ route('admin.roles.assign.permission.store') }}" method="POST">
-            @csrf
-
-            <div class="mb-5">
-                <label for="role" class="block text-sm font-semibold text-gray-700 mb-2">Select Role:</label>
-                <select name="role_id" id="role" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+    <!-- Role Selection Form -->
+    <form method="GET" action="{{ route('admin.roles.assign.permission') }}" class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="role_id" class="form-label">Select Role:</label>
+                <select name="role_id" id="role_id" class="form-select" onchange="this.form.submit()" required>
                     <option value="">-- Choose Role --</option>
                     @foreach ($roles as $role)
-                        <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
+                        <option value="{{ $role->id }}" {{ $selectedRoleId == $role->id ? 'selected' : '' }}>
+                            {{ ucfirst($role->name) }}
+                        </option>
                     @endforeach
                 </select>
             </div>
+        </div>
+    </form>
 
-            <div class="mb-5">
-                <label for="permissions" class="block text-sm font-semibold text-gray-700 mb-2">Select Permissions:</label>
-                <select name="permissions[]" id="permissions" multiple class="w-full px-4 py-2 border rounded-lg h-52 focus:outline-none focus:ring-2 focus:ring-green-500" required>
+    @if(isset($selectedRoleId))
+    <!-- Permissions Assignment Form -->
+    <form action="{{ route('admin.roles.assign.permission.store') }}" method="POST">
+        @csrf
+        <input type="hidden" name="role_id" value="{{ $selectedRoleId }}">
+
+        <div class="card glass-effect">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Assign Permissions</strong>
+                <div>
+                    <button type="button" class="btn btn-sm btn-outline-success me-2 select-all">Select All</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger deselect-all">Deselect All</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
                     @foreach ($permissions as $permission)
-                        <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check">
+                                <input 
+                                    class="form-check-input permission-checkbox" 
+                                    type="checkbox" 
+                                    name="permissions[]" 
+                                    value="{{ $permission->id }}" 
+                                    id="permission_{{ $permission->id }}"
+                                    {{ in_array($permission->id, $assignedPermissions ?? []) ? 'checked' : '' }}
+                                >
+                                <label class="form-check-label" for="permission_{{ $permission->id }}">
+                                    {{ $permission->name }}
+                                </label>
+                            </div>
+                        </div>
                     @endforeach
-                </select>
-                <p class="text-xs text-gray-500 mt-1">Hold <kbd>Ctrl</kbd> (Windows) or <kbd>Cmd</kbd> (Mac) to select multiple</p>
-            </div>
+                </div>
 
-            <div class="flex justify-end">
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow">
-                    Assign Permissions
-                </button>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Assign Permissions</button>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+    @endif
 </div>
+
+{{-- jQuery CDN and script --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $('.select-all').on('click', function () {
+            $('.permission-checkbox').prop('checked', true);
+        });
+
+        $('.deselect-all').on('click', function () {
+            $('.permission-checkbox').prop('checked', false);
+        });
+    });
+</script>
 @endsection

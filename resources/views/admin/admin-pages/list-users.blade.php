@@ -132,7 +132,8 @@
     </div>
 
     <div id="pagination-container">
-        {{ $users->links() }}
+        {{-- {{ $users->links() }} --}}
+        {{ $users->links('pagination.bootstrap-5') }}
     </div>
 </div>
 

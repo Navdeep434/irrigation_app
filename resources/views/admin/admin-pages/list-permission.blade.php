@@ -64,7 +64,10 @@
             </table>
 
             <!-- Pagination Links -->
-            {{ $permissions->links() }}
+            <div id="pagination-container">
+                {{-- {{ $permissions->links('pagination::bootstrap-4') }} --}}
+                {{ $permissions->links('pagination.bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>
@@ -159,6 +162,5 @@
         });
     });
 </script>
-
 
 @endsection

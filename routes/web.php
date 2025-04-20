@@ -68,6 +68,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::get('/permission/{id}/edit', [RoleAndPermissionController::class, 'editPermission'])->name('permission.edit');
         Route::post('/permission/{id}/update', [RoleAndPermissionController::class, 'updatePermission'])->name('permission.update');
         Route::delete('/permission/{id}', [RoleAndPermissionController::class, 'destroyPermission'])->name('permission.delete');
+
         Route::get('/settings',function () {
             return view('admin.admin-pages.settings');
         })->name('settings');

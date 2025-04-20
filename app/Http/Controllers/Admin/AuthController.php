@@ -25,7 +25,7 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email',
-            'country_code' => 'required|regex:/^\+[0-9]{1,5}$/',
+            'country_code' => 'required|digits_between:1,4',
             'contact_number' => 'required|digits_between:5,15',
             'gender'     => 'required|string|in:male,female,other',
             'dob'        => 'required|date',
