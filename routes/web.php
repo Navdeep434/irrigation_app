@@ -79,8 +79,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 
     Route::middleware('role:superadmin|admin|technician')->group(function () {
         Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
-        Route::get('/admin/user/profile', [AdminUser::class, 'editProfile'])->name('profile');
-        Route::post('/admin/user/profile/update', [AdminUser::class, 'updateProfile'])->name('profile.update');
+        Route::get('/user/profile', [AdminUser::class, 'editProfile'])->name('profile');
+        Route::post('/user/profile/update', [AdminUser::class, 'updateProfile'])->name('profile.update');
     });
 
     Route::middleware('role:superadmin|admin')->group(function () {
