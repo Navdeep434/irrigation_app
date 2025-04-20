@@ -20,7 +20,7 @@ class RoleAndPermissionController extends Controller
         
             $roles->where(function ($query) use ($search) {
                 $query->where('name', 'like', "%$search%")
-                      ->orWhere('guard_name', 'like', "%$search%");
+                    ->orWhere('guard_name', 'like', "%$search%");
             });
         }
 
@@ -30,9 +30,14 @@ class RoleAndPermissionController extends Controller
 
         $roles = $roles->paginate(10);
 
+        // Check if users are attached to roles
+        foreach ($roles as $role) {
+            $role->has_users = $role->users()->exists();  // Check if users are attached
+        }
 
         return view('admin.admin-pages.list-role', compact('roles'));
     }
+
 
     public function createRole()
     {
@@ -174,6 +179,34 @@ class RoleAndPermissionController extends Controller
 
         // Return success response
         return response()->json(['success' => true, 'message' => 'Permission deleted successfully!']);
+    }
+
+    /**
+     * Get all roles and permissions for the assign view.
+     */
+    public function getRolesAndPermissions()
+    {
+        $roles = Role::all();
+        $permissions = Permission::all();
+
+        return view('admin.admin-pages.assign-permission', compact('roles', 'permissions'));
+    }
+
+    /**
+     * Assign permissions to a selected role.
+     */
+    public function assignPermissionToRole(Request $request)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permissions' => 'required|array',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+
+        $role = Role::findOrFail($request->role_id);
+        $role->syncPermissions($request->permissions); // Replace with `givePermissionTo()` if needed
+
+        return back()->with('success', 'Permissions assigned successfully to the role.');
     }
 
 

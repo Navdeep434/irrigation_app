@@ -82,6 +82,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::post('/verify-user/{id}', [AdminUser::class, 'verifyUser'])->name('verify-user');
         Route::get('/roles/list', [RoleAndPermissionController::class, 'listRole'])->name('roles.list');
         Route::get('/permission/list', [RoleAndPermissionController::class, 'listPermission'])->name('permission.list');
+
+        Route::get('/roles/assign-permission', [RoleAndPermissionController::class, 'getRolesAndPermissions'])->name('roles.assign.permission');
+        Route::post('/roles/assign-permission', [RoleAndPermissionController::class, 'assignPermissionToRole'])->name('roles.assign.permission.store');
+
         
     });
     
