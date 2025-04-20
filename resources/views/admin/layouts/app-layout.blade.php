@@ -67,8 +67,7 @@
                         <a href="{{route('admin.roles.list')}}" class="nav-link">List Roles</a>
                         <a href="{{route('admin.permission.create')}}" class="nav-link">Create Permission</a>
                         <a href="{{route('admin.permission.list')}}" class="nav-link">List Permissions</a>
-                        <a href="{{route('admin.roles.assign.permission')}}" class="nav-link">Assign Permissions To Role</a>
-                        <a href="{{route('admin.assign.role')}}" class="nav-link">Assign Permissions to User</a>
+                        <a href="{{route('admin.roles.assign.permission')}}" class="nav-link">Assign Permissions</a>
                     </div>
                 </li>
 
