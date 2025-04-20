@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -73,7 +75,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'country_code' => 'required|digits_between:1,4',
+            'country_code' => 'required|string|max:5',
             'contact_number' => 'required|digits_between:5,15',
             'gender' => 'required|string|in:male,female,other',
             'dob' => 'required|date',
@@ -91,7 +93,7 @@ class UserController extends Controller
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
-            'country_code' => '+' . $validated['country_code'],
+            'country_code' =>$validated['country_code'],
             'contact_number' => $validated['contact_number'],
             'gender' => $validated['gender'],
             'dob' => $validated['dob'],
@@ -135,7 +137,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $id,
-            'country_code' => 'required|regex:/^\+[0-9]{1,5}$/',
+            'country_code' => 'required|string|max:5',
             'contact_number' => 'required|digits_between:5,15',
             'gender'     => 'required|string|in:male,female,other',
             'dob'        => 'required|date',
@@ -153,7 +155,7 @@ class UserController extends Controller
         $user->first_name = $validated['first_name'];
         $user->last_name  = $validated['last_name'];
         $user->email      = $validated['email'];
-        $user->country_code = '+' . $validated['country_code'];
+        $user->country_code = $validated['country_code'];
         $user->contact_number = $validated['contact_number'];
         $user->gender     = $validated['gender'];
         $user->dob        = $validated['dob'];
@@ -234,5 +236,53 @@ class UserController extends Controller
         return response()->json(['success' => true, 'message' => $message]);
     }
 
+    public function editProfile()
+    {
+        $user = auth()->user(); // or User::find(auth()->id());
+        return view('admin.admin-pages.profile ', compact('user'));
+    }
+    
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
 
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'gender' => 'required|in:male,female,other',
+            'dob' => 'required|date',
+            'country_code' => 'required|string|max:5',
+            'contact_number' => 'required|digits_between:5,15',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+        // Update fields
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->gender = $request->gender;
+        $user->dob = $request->dob;
+        $user->country_code = $request->country_code;
+        $user->contact_number = $request->contact_number;
+    
+        // Optional: Handle profile image
+        if ($request->hasFile('profile_image')) {
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+    
+            $imagePath = $request->file('profile_image')->store('profile_images', 'public');
+            $user->profile_image = $imagePath;
+        }
+    
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
+    
 }

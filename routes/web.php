@@ -72,10 +72,15 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::get('/settings',function () {
             return view('admin.admin-pages.settings');
         })->name('settings');
+
+       
+
     });
 
     Route::middleware('role:superadmin|admin|technician')->group(function () {
         Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+        Route::get('/admin/user/profile', [AdminUser::class, 'editProfile'])->name('profile');
+        Route::post('/admin/user/profile/update', [AdminUser::class, 'updateProfile'])->name('profile.update');
     });
 
     Route::middleware('role:superadmin|admin')->group(function () {
@@ -87,7 +92,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::get('/roles/assign-permission', [RoleAndPermissionController::class, 'getRolesAndPermissions'])->name('roles.assign.permission');
         Route::post('/roles/assign-permission', [RoleAndPermissionController::class, 'assignPermissionToRole'])->name('roles.assign.permission.store');
 
-        
+         
     });
     
     Route::middleware('role:superadmin|technician')->group(function () {

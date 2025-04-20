@@ -81,7 +81,7 @@
 
         <!-- Profile and Logout -->
         <div class="profile-logout">
-            <a href="/admin/profile">
+            <a href="{{route('admin.profile')}}" class="nav-link">
                 <i class="fas fa-user-circle"></i> <span class="sidebar-text">Profile</span>
             </a>
             <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
