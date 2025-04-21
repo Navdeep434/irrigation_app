@@ -24,9 +24,9 @@
     <!-- Role Selection Form -->
     <form method="GET" action="{{ route('admin.roles.assign.permission') }}" class="mb-4">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="role_id" class="form-label">Select Role:</label>
-                <select name="role_id" id="role_id" class="form-select" onchange="this.form.submit()" required>
+                <select name="role_id" id="role_id" class="form-select glass-input" onchange="this.form.submit()" required>
                     <option value="">-- Choose Role --</option>
                     @foreach ($roles as $role)
                         <option value="{{ $role->id }}" {{ $selectedRoleId == $role->id ? 'selected' : '' }}>
