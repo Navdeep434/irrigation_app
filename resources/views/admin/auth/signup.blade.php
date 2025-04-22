@@ -59,7 +59,7 @@
             <div class="mb-3">
                 <label class="form-label">Contact Number</label>
                 <div class="input-group">
-                    <input type="text" name="country_code" class="form-control" placeholder="91" style="max-width: 80px;" required>
+                    <input type="text" name="country_code" class="form-control" placeholder="+91" style="max-width: 80px;" required>
                     <input type="text" name="contact_number" class="form-control" placeholder="Phone number" required>
                 </div>
                 <div class="form-text">Example: 1 for US/Canada, 44 for UK, 91 for India (without the + sign)</div>

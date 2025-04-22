@@ -43,21 +43,16 @@ class AuthController extends Controller
 
             // Handle profile image upload with unique name
             $profileImagePath = null;
+
             if ($request->hasFile('profile_image')) {
                 $file = $request->file('profile_image');
-                
                 $ext = $file->getClientOriginalExtension();
                 $filename = 'profile_' . time() . '_' . uniqid() . '.' . $ext;
-                
-                // Make sure the directory exists
-                if (!file_exists(storage_path('app/public/profiles'))) {
-                    mkdir(storage_path('app/public/profiles'), 0777, true);
-                }
-                
-                $profileImagePath = $file->storeAs('profiles', $filename, 'public');
-                
+
+                // Store image in 'profile_images' folder in public disk
+                $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
             }
-            
+
             $user = new User([
                 'first_name'     => $validated['first_name'],
                 'last_name'      => $validated['last_name'],

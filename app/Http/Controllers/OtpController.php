@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Role;
 
@@ -19,13 +21,11 @@ class OtpController extends Controller
     // Handle user OTP verification
     public function verifyUserOtp(Request $request)
     {
-        // Validate the OTP
         $request->validate([
             'otp' => 'required|digits:6',
             'email' => 'required|email',
         ]);
 
-        // Look for unverified user
         $user = User::where('email', $request->input('email'))
                     ->where('is_verified', false)
                     ->first();
@@ -51,24 +51,32 @@ class OtpController extends Controller
             ]);
         }
 
-        // Assign role
-        $role = Role::firstOrCreate(['name' => 'user', 'guard_name' => 'web']);
-        $user->assignRole($role);
-
-        // Update verification status and save assigned role
         $user->is_verified = true;
         $user->status = 'active';
-        // $user->role = $user->role ?? 'user';
         $user->otp = null;
         $user->otp_expires_at = null;
         $user->email_verified_at = now();
         $user->save();
 
+        // ✅ Create customer record and generate UID
+        $uidData = Customer::generateTechyUid($user);
+
+        // ✅ Send UID mail
+        try {
+            Mail::to($user->email)->send(new \App\Mail\CustomerUidMail(
+                $user->first_name . ' ' . $user->last_name,
+                $uidData['uid']
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send UID email: ' . $e->getMessage());
+        }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'OTP verified successfully. You can now log in.',
+            'message' => 'OTP verified successfully. UID sent to your email.',
         ]);
     }
+
 
     // Display OTP form for superadmin verification
     public function showAdminOtpForm()

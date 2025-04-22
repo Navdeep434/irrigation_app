@@ -19,7 +19,6 @@ class AuthController extends Controller
 
     public function signup(Request $request)
     {
-        // Validate request
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -32,37 +31,28 @@ class AuthController extends Controller
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
-        // Generate OTP
         $otp = rand(100000, 999999);
         $otpExpiration = now()->addMinutes(5);
-
-        // Handle profile image upload with unique name
         $profileImagePath = null;
+
         if ($request->hasFile('profile_image')) {
             $file = $request->file('profile_image');
-            
             $ext = $file->getClientOriginalExtension();
             $filename = 'profile_' . time() . '_' . uniqid() . '.' . $ext;
-            
-            // Make sure the directory exists
-            if (!file_exists(storage_path('app/public/profiles'))) {
-                mkdir(storage_path('app/public/profiles'), 0777, true);
-            }
-            
-            $profileImagePath = $file->storeAs('profiles', $filename, 'public');
-            
+
+            // Store image in 'profile_images' folder in public disk
+            $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
         }
 
-        // Create user
         $user = new User([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'country_code' => $request->input('country_code'),
-            'contact_number'  => $validated['contact_number'],
-            'gender' => $request->input('gender'),
-            'dob' => $request->input('dob'),
-            'password' => bcrypt($request->input('password')),
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'country_code' => $validated['country_code'],
+            'contact_number' => $validated['contact_number'],
+            'gender' => $validated['gender'],
+            'dob' => $validated['dob'],
+            'password' => bcrypt($validated['password']),
             'status' => 'pending',
             'otp' => $otp,
             'otp_expires_at' => $otpExpiration,
@@ -70,31 +60,24 @@ class AuthController extends Controller
         ]);
 
         $user->save();
-
-        // Assign role to the user
         $user->assignRole('user');
 
-        // Prepare data for email
-        $userData = [
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
-            'gender' => $validated['gender'],
-            'dob' => $validated['dob'],
-        ];
-
-        // Send OTP email using the UserOtpMail mailable
         try {
-            Mail::to($user->email)->send(new UserOtpMail($userData, $otp));
+            Mail::to($user->email)->send(new UserOtpMail([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'gender' => $validated['gender'],
+                'dob' => $validated['dob'],
+            ], $otp));
         } catch (\Exception $e) {
-            // Log or handle mail error
             return redirect()->back()->withErrors(['email' => 'Failed to send OTP email. Please try again later.']);
         }
 
-        // Redirect to OTP verification page
         return redirect()->to('/verify-otp?email=' . $user->email)
                         ->with('message', 'An OTP has been sent to your email for verification.');
     }
+
 
     public function showLoginForm()
     {
