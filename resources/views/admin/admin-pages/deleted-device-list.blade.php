@@ -8,8 +8,8 @@
     <hr>
     <div class="row align-items-center mb-3">
         <div class="col-auto">
-            <a href="{{ route('admin.devices.list') }}" class="btn custom-header">
-                <i class="fa fa-arrow-left"></i> Back to Devices
+            <a href="{{ url()->previous() }}" class="btn custom-header">
+                <i class="fa fa-arrow-left"></i> Back
             </a>
         </div>
         <div class="col-md-4 ps-0">
@@ -51,9 +51,6 @@
                                     <button type="button" class="btn btn-sm btn-success restore-btn" data-id="{{ $device->id }}" data-number="{{ $device->device_number }}">
                                         <i class="fa fa-trash-restore"></i> Restore
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="{{ $device->id }}" data-number="{{ $device->device_number }}">
-                                        <i class="fa fa-trash-alt"></i> Delete Permanently
-                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -82,15 +79,14 @@
         </div>
     </div>
 </div>
-@endsection
 
-@section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let actionType = '';
     let selectedId = '';
 
     $(document).ready(function () {
+        // Search functionality
         $('#searchInput').on('input', function () {
             const value = $(this).val().toLowerCase();
             $('#deviceTable tbody tr').filter(function () {
@@ -98,6 +94,7 @@
             });
         });
 
+        // Restore button click
         $('.restore-btn').on('click', function () {
             selectedId = $(this).data('id');
             const deviceNumber = $(this).data('number');
@@ -108,16 +105,7 @@
             $('#confirmModal').modal('show');
         });
 
-        $('.delete-btn').on('click', function () {
-            selectedId = $(this).data('id');
-            const deviceNumber = $(this).data('number');
-            actionType = 'delete';
-
-            $('#confirmModalTitle').text('Delete Device Permanently');
-            $('#confirmModalBody').html(`Are you sure you want to <span class="text-danger fw-bold">permanently delete</span> device <strong>${deviceNumber}</strong>? This action cannot be undone.`);
-            $('#confirmModal').modal('show');
-        });
-
+        // Confirm action button click
         $('#confirmActionBtn').on('click', function () {
             if (!selectedId || !actionType) return;
 
@@ -126,10 +114,7 @@
             let data = { _token: '{{ csrf_token() }}' };
 
             if (actionType === 'restore') {
-                url = `/admin/devices/${selectedId}/restore`;
-            } else if (actionType === 'delete') {
-                url = `/admin/devices/${selectedId}/force-delete`;
-                data._method = 'DELETE';
+                url = `{{ route('admin.devices.restore', ':id') }}`.replace(':id', selectedId);
             }
 
             $.ajax({
@@ -138,12 +123,27 @@
                 data: data,
                 success: function (response) {
                     $('#confirmModal').modal('hide');
-                    $(`#device-row-${selectedId}`).remove();
-                    alert(response.message || 'Action completed successfully.');
+                    
+                    if ($('#deviceTable tbody tr').length === 1) {
+                        // If this was the last row, refresh the page
+                        location.reload();
+                    } else {
+                        // Remove the row from the table
+                        $(`#device-row-${selectedId}`).fadeOut('slow', function() {
+                            $(this).remove();
+                            // Re-index the remaining rows
+                            $('#deviceTable tbody tr').each(function(index) {
+                                $(this).find('td:first').text(index + 1);
+                            });
+                        });
+                        
+                        // Show success message
+                        alert(response.message || 'Action completed successfully.');
+                    }
                 },
                 error: function (xhr) {
                     $('#confirmModal').modal('hide');
-                    alert('Something went wrong. Please try again.');
+                    alert(xhr.responseJSON?.message || 'Something went wrong. Please try again.');
                 }
             });
         });

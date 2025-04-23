@@ -66,7 +66,7 @@
                         <a href="{{ route('admin.devices.create') }}" class="nav-link">Create Device</a>
                         <a href="{{route('admin.devices.list')}}" class="nav-link">List Devices</a>
                         <a href="{{route('admin.devices.trash')}}" class="nav-link">Deleted Devices</a>
-                        <a href="" class="nav-link">Repair Device</a>
+                        <a href="{{route('admin.devices.repairList')}}" class="nav-link">Repair Device</a>
                     </div>
                 </li>
                 

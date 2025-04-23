@@ -60,7 +60,7 @@ class DeviceController extends Controller
     public function toggleRepair($deviceId)
     {
         $device = Device::findOrFail($deviceId);
-        $device->in_repair = !$device->in_repair; // Toggle repair status
+        $device->in_repair = !$device->in_repair;
         $device->save();
 
         return response()->json(['message' => 'Device repair status toggled successfully']);
@@ -138,5 +138,32 @@ class DeviceController extends Controller
         return view('admin.admin-pages.deleted-device-list', compact('trashedDevices'));
     }
 
+    public function restore($id)
+    {
+        try {
+            $device = Device::onlyTrashed()->findOrFail($id);
+            $device->restore();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Device #{$device->device_number} has been restored successfully."
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => "Failed to restore device. " . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function repairList()
+    {
+        $devices = Device::with(['user', 'customer'])
+                        ->where('in_repair', true)
+                        ->orderBy('updated_at', 'desc')
+                        ->get();
+
+        return view('admin.admin-pages.device-repair-list', compact('devices'));
+    }
 
 }

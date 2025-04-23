@@ -85,8 +85,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 
         Route::get('/devices/trash', [AdminDevice::class, 'trashed'])->name('devices.trash');
         Route::post('/devices/{id}/restore', [AdminDevice::class, 'restore'])->name('devices.restore');
-        Route::delete('/devices/{id}/force-delete', [AdminDevice::class, 'forceDelete'])->name('devices.force-delete');
-
+        Route::get('/devices/repair-list', [AdminDevice::class, 'repairList'])->name('devices.repairList');
 
 
 
