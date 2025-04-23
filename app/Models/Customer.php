@@ -65,4 +65,9 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function devices()
+    {
+        return $this->hasMany(Device::class);
+    }
+
 }

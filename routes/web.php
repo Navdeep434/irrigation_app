@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\AuthController as WebAuth;
 use App\Http\Controllers\Web\DashboardController as WebDashboard;
 use App\Http\Controllers\Admin\AuthController as AdminAuth;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\DeviceController as AdminDevice;
 use App\Http\Controllers\Admin\RoleAndPermissionController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\Admin\UserController as AdminUser;
@@ -69,6 +70,25 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::get('/permission/{id}/edit', [RoleAndPermissionController::class, 'editPermission'])->name('permission.edit')->middleware('permission:Can Edit Permission');
         Route::post('/permission/{id}/update', [RoleAndPermissionController::class, 'updatePermission'])->name('permission.update')->middleware('permission:Can Edit Permission');
         Route::delete('/permission/{id}', [RoleAndPermissionController::class, 'destroyPermission'])->name('permission.delete')->middleware('permission:Can Delete Permission');
+
+        // Device Management
+        Route::get('/devices/create', [AdminDevice::class, 'create'])->name('devices.create');
+        Route::post('/devices/store', [AdminDevice::class, 'store'])->name('devices.store');
+        Route::get('/devices', [AdminDevice::class, 'deviceList'])->name('devices.list');
+        Route::get('/devices/{device}/edit', [AdminDevice::class, 'edit'])->name('devices.edit');
+        Route::put('/devices/{device}', [AdminDevice::class, 'update'])->name('devices.update');
+        Route::delete('/devices/{device}', [AdminDevice::class, 'destroy'])->name('devices.destroy');
+        // Routes for toggling device actions
+        Route::post('/devices/{deviceId}/toggle-status', [AdminDevice::class, 'toggleStatus'])->name('devices.toggle.status');
+        Route::post('/devices/{deviceId}/toggle-repair', [AdminDevice::class, 'toggleRepair'])->name('devices.toggle.repair');
+        Route::post('/devices/{deviceId}/toggle-blocked', [AdminDevice::class, 'toggleBlocked'])->name('devices.toggle.blocked');
+
+        Route::get('/devices/trash', [AdminDevice::class, 'trashed'])->name('devices.trash');
+        Route::post('/devices/{id}/restore', [AdminDevice::class, 'restore'])->name('devices.restore');
+        Route::delete('/devices/{id}/force-delete', [AdminDevice::class, 'forceDelete'])->name('devices.force-delete');
+
+
+
 
         // Settings (optional permission)
         Route::get('/settings', function () {

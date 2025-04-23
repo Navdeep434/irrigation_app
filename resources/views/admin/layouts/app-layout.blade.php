@@ -59,6 +59,18 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#devicesSection" role="button" aria-expanded="false">
+                        <i class="fas fa-microchip me-2"></i> <span class="sidebar-text">Devices</span>
+                    </a>
+                    <div class="collapse" id="devicesSection">
+                        <a href="{{ route('admin.devices.create') }}" class="nav-link">Create Device</a>
+                        <a href="{{route('admin.devices.list')}}" class="nav-link">List Devices</a>
+                        <a href="{{route('admin.devices.trash')}}" class="nav-link">Deleted Devices</a>
+                        <a href="" class="nav-link">Repair Device</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#rolesPermissions" role="button" aria-expanded="false">
                         <i class="fas fa-lock me-2"></i> <span class="sidebar-text">Roles & Permissions</span>
                     </a>
