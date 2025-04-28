@@ -74,8 +74,7 @@ class AuthController extends Controller
             return redirect()->back()->withErrors(['email' => 'Failed to send OTP email. Please try again later.']);
         }
 
-        return redirect()->to('/verify-otp?email=' . $user->email)
-                        ->with('message', 'An OTP has been sent to your email for verification.');
+        return redirect()->to('/verify-otp?email=' . $user->email)->with('message', 'An OTP has been sent to your email for verification.');
     }
 
 

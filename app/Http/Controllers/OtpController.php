@@ -59,7 +59,7 @@ class OtpController extends Controller
         $user->save();
 
         // ✅ Create customer record and generate UID
-        $uidData = Customer::generateTechyUid($user);
+        $uidData = Customer::generateCustomerUid($user);
 
         // ✅ Send UID mail
         try {

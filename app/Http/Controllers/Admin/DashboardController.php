@@ -11,8 +11,8 @@ use Spatie\Permission\Models\Role;
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $user = Auth::user();
+    { 
+        $user = Auth::guard('admin')->user();
         $totalUsers = User::count();
         $activeUsers = User::where('status', 'active')->count();
         $inactiveUsers = User::where('status', 'inactive')->count();

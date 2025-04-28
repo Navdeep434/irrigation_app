@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    // Define the fillable fields for mass assignment
     protected $fillable = [
         'user_id',
         'uid',
@@ -23,12 +25,14 @@ class Customer extends Model
         'gender',
         'dob',
         'status',
+        'is_blocked',
+        'is_verified',
     ];
 
     /**
      * Generate a unique UID in the format SSNM-YYYY-ID-000001
      */
-    public static function generateTechyUid(User $user)
+    public static function generateCustomerUid(User $user)
     {
         $year = now()->year;
 
@@ -37,7 +41,7 @@ class Customer extends Model
         $next = $last ? $last + 1 : 1;
 
         // Format: SSNM-2025-<user_id>-000001
-        $uid = 'SSNM-' . $year . '-' . $user->id . '-' . str_pad($next, 6, '0', STR_PAD_LEFT);
+        $uid = 'SSNM' . $year . $user->id . str_pad($next, 6, '0', STR_PAD_LEFT);
 
         // Save to customers table
         $customer = self::create([
@@ -53,6 +57,8 @@ class Customer extends Model
             'gender' => $user->gender,
             'dob' => $user->dob,
             'status' => 'active',
+            'is_blocked' => false,
+            'is_verified' => false,
         ]);
 
         return $customer;
@@ -65,6 +71,10 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Relationship with Device
+     */
     public function devices()
     {
         return $this->hasMany(Device::class);

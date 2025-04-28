@@ -14,35 +14,42 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->string('device_number')->unique();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('customer_id')->nullable();
-        
-            $table->integer('total_valves')->default(0);
-            $table->integer('total_flow_sensors')->default(0);
-            $table->integer('total_water_temp_sensors')->default(1);
-        
+
+            $table->foreignId('user_id')
+                  ->nullable()
+                  ->constrained()
+                  ->nullOnDelete();
+
+            $table->foreignId('customer_id')
+                  ->nullable()
+                  ->constrained()
+                  ->nullOnDelete();
+
+            $table->unsignedInteger('total_valves')->default(0);
+            $table->unsignedInteger('total_flow_sensors')->default(0);
+            $table->unsignedInteger('total_water_temp_sensors')->default(1);
+
             $table->boolean('in_repair')->default(false);
             $table->boolean('is_blocked')->default(false);
-        
+
             $table->string('status')->default('inactive');
+
+            $table->timestamp('assigned_at')->nullable();
+            $table->timestamp('unassigned_at')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
-        
-            // ← NEW: record who deleted this row
-            $table->unsignedBigInteger('deleted_by')->nullable()->after('deleted_at');
-            $table->foreign('deleted_by')
-                  ->references('id')->on('users')
-                  ->onDelete('set null');
-        
-            $table->foreign('user_id')
-                  ->references('id')->on('users')
-                  ->onDelete('set null');
-            $table->foreign('customer_id')
-                  ->references('id')->on('customers')
-                  ->onDelete('set null');
+
+            // Record who deleted this row
+            $table->foreignId('deleted_by')
+                  ->nullable()
+                  ->constrained('users')
+                  ->nullOnDelete()
+                  ->after('deleted_at');
+
+            // Index for faster lookups by user and status
+            $table->index(['user_id', 'status']);
         });
-        
-        
     }
 
     /**

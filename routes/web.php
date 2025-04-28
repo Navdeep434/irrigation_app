@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\API\DeviceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController as WebAuth;
 use App\Http\Controllers\Web\DashboardController as WebDashboard;
 use App\Http\Controllers\Admin\AuthController as AdminAuth;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\DeviceController as AdminDevice;
 use App\Http\Controllers\Admin\RoleAndPermissionController;
@@ -86,6 +88,21 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::get('/devices/trash', [AdminDevice::class, 'trashed'])->name('devices.trash');
         Route::post('/devices/{id}/restore', [AdminDevice::class, 'restore'])->name('devices.restore');
         Route::get('/devices/repair-list', [AdminDevice::class, 'repairList'])->name('devices.repairList');
+        Route::get('/devices/available', [AdminDevice::class, 'showUnassociatedForm'])->name('devices.availble');
+        // Route::post('/devices/assign', [AdminDevice::class, 'assignDevice'])->name('devices.assign');
+
+        
+        // Customer Management
+        Route::get('customers', [CustomerController::class, 'index'])->name('customers.list');
+        Route::get('customer/{id}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
+        Route::post('customer/{id}/update', [CustomerController::class, 'update'])->name('customer.update');
+        Route::post('customers/{id}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggleStatus');
+        Route::post('customers/{id}/toggleBlock', [CustomerController::class, 'toggleBlock'])->name('customers.toggleBlock');
+        Route::delete('customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+        Route::post('/devices/{id}/unassociate', [CustomerController::class, 'unassociateCustomer'])->name('devices.unassociate');
+        Route::post('/customers/attach-device', [CustomerController::class, 'attachDeviceCustomer'])->name('customer.attachDevice');
+
+
 
 
 
@@ -121,3 +138,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 
 Route::get('/admin/verify-otp', [OtpController::class, 'showAdminOtpForm'])->name('admin.verifyOtp');
 Route::post('/admin/verify-otp', [OtpController::class, 'verifySuperadminOtp'])->name('admin.verifyOtp.post');
+
+
+// =======================
+// MQTT Routes
+// =======================

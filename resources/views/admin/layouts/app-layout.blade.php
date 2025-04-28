@@ -59,6 +59,15 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#customersSection" role="button" aria-expanded="false">
+                        <i class="fas fa-users me-2"></i> <span class="sidebar-text">Customers</span>
+                    </a>
+                    <div class="collapse" id="customersSection">
+                        <a href="{{ route('admin.customers.list') }}" class="nav-link">List Customers</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#devicesSection" role="button" aria-expanded="false">
                         <i class="fas fa-microchip me-2"></i> <span class="sidebar-text">Devices</span>
                     </a>
@@ -66,7 +75,8 @@
                         <a href="{{ route('admin.devices.create') }}" class="nav-link">Create Device</a>
                         <a href="{{route('admin.devices.list')}}" class="nav-link">List Devices</a>
                         <a href="{{route('admin.devices.trash')}}" class="nav-link">Deleted Devices</a>
-                        <a href="{{route('admin.devices.repairList')}}" class="nav-link">Repair Device</a>
+                        <a href="{{route('admin.devices.repairList')}}" class="nav-link">In Repair</a>
+                        <a href="{{route('admin.devices.availble')}}" class="nav-link">Available Device</a>
                     </div>
                 </li>
                 

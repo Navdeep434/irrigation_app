@@ -15,8 +15,14 @@
         <div class="col-md-4 ps-0">
             <div class="input-group glass-input">
                 <span class="input-group-text bg-transparent border-0" id="search-addon"><i class="fa fa-search"></i></span>
-                <input type="text" class="form-control bg-transparent border-0 text-white shadow-none" id="searchInput" placeholder="Search by name or email...">
+                <input type="text" class="form-control bg-transparent border-0 text-white shadow-none" id="searchInput" placeholder="Search...">
             </div>
+        </div>
+
+        <div class="col-auto ms-auto">
+            <a href="{{ route('admin.devices.create') }}" class="btn btn-primary">
+                <i class="fa fa-plus-circle"></i> Add Device
+            </a>
         </div>
     </div>
     <hr>
@@ -28,7 +34,8 @@
                         <tr>
                             <th>#</th>
                             <th>Device Number</th>
-                            <th>User</th>
+                            <th>Customer</th>
+                            <th>UID</th>
                             <th>Valves</th>
                             <th>Flow Sensors</th>
                             <th>Temperature Sensors</th>
@@ -44,7 +51,12 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $device->device_number }}</td>
-                                <td>{{ $device->user?->name ?? '—' }}</td>
+                                <td>
+                                    {{ $device->customer?->first_name && $device->customer?->last_name
+                                        ? $device->customer->first_name.' '.$device->customer->last_name
+                                        : '—' }}
+                                </td>
+                                <td>{{ $device->customer?->uid ?? '—' }}</td>
                                 <td>{{ $device->total_valves }}</td>
                                 <td>{{ $device->total_flow_sensors }}</td>
                                 <td>{{ $device->total_water_temp_sensors }}</td>
@@ -80,8 +92,8 @@
                                 </td>
                                 <td>{{ $device->created_at->format('d M Y') }}</td>
                                 <td>
-                                    <a href="{{ route('admin.devices.edit', $device->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $device->id }}, '{{ $device->device_number }}')">Delete</button>
+                                    <a href="{{ route('admin.devices.edit', $device->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $device->id }}, '{{ $device->device_number }}')"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         @endforeach
