@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuth;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\DeviceController as AdminDevice;
+use App\Http\Controllers\Web\DeviceController as UserDevice;
 use App\Http\Controllers\Admin\RoleAndPermissionController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\Admin\UserController as AdminUser;
@@ -29,6 +30,7 @@ Route::middleware('auth:web')->group(function () {
 
     // Protected User Dashboard Route
     Route::middleware('role:user')->get('/dashboard', [WebDashboard::class, 'index'])->name('user.dashboard');
+    Route::middleware('role:user')->get('/device-control', [UserDevice::class, 'index'])->name('device.control');
 });
 
 Route::get('/verify-otp', [OtpController::class, 'showUserOtpForm'])->name('user.verifyOtp');

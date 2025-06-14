@@ -1,0 +1,229 @@
+/* sidebar.css - Updated for toggle functionality */
+
+/* Sidebar base styles */
+.sidebar {
+    width: 250px;
+    background-color: #1e2a38;
+    color: #cfd8dc;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    z-index: 1000;
+    padding-top: 1rem;
+}
+
+.sidebar .brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4caf50;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sidebar .brand i {
+    font-size: 1.8rem;
+}
+
+.sidebar .user-info {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #34495e;
+    gap: 1rem;
+}
+
+.sidebar .icon-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #2f3e4e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar .user-details {
+    flex: 1;
+}
+
+.sidebar .user-name {
+    font-weight: 600;
+    margin: 0;
+}
+
+.sidebar .nav-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .nav-section-title {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #8ea7b3;
+    user-select: none;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    color: #cfd8dc;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    gap: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar a i {
+    min-width: 20px;
+    font-size: 1.1rem;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #4caf50;
+    color: white;
+}
+
+.sidebar .collapse a {
+    padding-left: 3rem;
+}
+
+.sidebar .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #34495e;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .sidebar-footer a {
+    padding: 0.5rem 0;
+    color: #cfd8dc;
+    font-weight: 500;
+}
+
+.sidebar .sidebar-footer a:hover {
+    color: #4caf50;
+}
+
+/* TOGGLE RELATED STYLES */
+
+/* Collapsed sidebar */
+.sidebar.collapsed {
+    width: 70px !important;
+}
+
+/* Content area shifted */
+.content.expanded {
+    margin-left: 70px !important;
+}
+
+/* Hide text and section titles in collapsed sidebar */
+.sidebar.collapsed .brand span,
+.sidebar.collapsed .nav-section-title,
+.sidebar.collapsed a span,
+.sidebar.collapsed .user-details {
+    display: none !important;
+}
+
+/* Center icons and user info in collapsed sidebar */
+.sidebar.collapsed a,
+.sidebar.collapsed .user-info {
+    justify-content: center !important;
+    padding: 15px 0 !important;
+}
+
+/* Sidebar toggle button styling in top navbar */
+.top-navbar .nav-toggler {
+    background: none;
+    border: none;
+    color: #1e2a38;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: color 0.2s ease;
+}
+
+.top-navbar .nav-toggler:hover {
+    color: #4caf50;
+}
+
+/* Page content default margin to account for sidebar */
+.content {
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+    padding: 1.5rem;
+}
+
+/* Top navbar styling */
+.top-navbar {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+}
+
+.page-title {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #1e2a38;
+    flex-grow: 1;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notif-badge {
+    position: relative;
+    color: #1e2a38;
+    cursor: pointer;
+}
+
+.badge-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background-color: #e74c3c;
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+/* Add responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -250px;
+        transition: left 0.3s ease;
+    }
+    .sidebar.collapsed {
+        left: 0;
+        width: 250px !important;
+    }
+    .content,
+    .content.expanded {
+        margin-left: 0 !important;
+        transition: margin-left 0.3s ease;
+    }
+}
