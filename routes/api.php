@@ -22,6 +22,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'auth:admin'
 
 Route::post('/signup', [ApiAuthController::class, 'signup'])->name('api.signup');
 Route::post('/verify-otp', [ApiAuthController::class, 'verifyUserOtp'])->name('api.verifyOtp');
+Route::post('/login', [ApiAuthController::class, 'loginApi']);
 
 
-
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [ApiAuthController::class, 'logout']);
+    Route::get('/profile', [ApiAuthController::class, 'profile']);
+    Route::post('/update-password', [ApiAuthController::class, 'updatePassword']);
+});

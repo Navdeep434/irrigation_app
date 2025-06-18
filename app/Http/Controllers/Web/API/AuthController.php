@@ -8,8 +8,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserOtpMail;
 use App\Models\Customer;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -61,6 +62,7 @@ class AuthController extends Controller
             'otp' => $otp,
             'otp_expires_at' => $otpExpiration,
             'profile_image' => $profileImagePath,
+            'is_2fa_enabled' => false,
         ]);
 
         $user->save();
@@ -157,45 +159,38 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function loginApi(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:8',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $request->email)->first();
 
-        if (!Auth::attempt($credentials)) {
+        if (!$user || !Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid credentials.'
-            ], 422);
+                'message' => 'Invalid credentials.',
+            ], 401);
         }
 
-        $user = Auth::user();
-
-        // Role check
         if (!$user->hasRole('user')) {
-            Auth::logout();
             return response()->json([
                 'status' => false,
-                'message' => 'Unauthorized login.'
+                'message' => 'Unauthorized login.',
             ], 403);
         }
 
-        // If user is not verified or opted for 2FA
-        if (!$user->is_verified || $user->two_factor_enabled) {
-            Auth::logout(); // Logout to prevent session issues
+        if (!$user->is_verified) {
+            $otp = $user->otp && $user->otp_expires_at > now()
+                ? $user->otp
+                : rand(100000, 999999);
 
-            // Generate OTP if expired or missing
-            if (!$user->otp || now()->gt($user->otp_expires_at)) {
-                $user->otp = rand(100000, 999999);
-                $user->otp_expires_at = now()->addMinutes(10);
-                $user->save();
-            }
+            $user->otp = $otp;
+            $user->otp_expires_at = now()->addMinutes(10);
+            $user->save();
 
-            // Send OTP
             try {
                 Mail::to($user->email)->send(new UserOtpMail([
                     'first_name' => $user->first_name,
@@ -203,31 +198,69 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'gender' => $user->gender,
                     'dob' => $user->dob,
-                ], $user->otp));
+                ], $otp));
             } catch (\Exception $e) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Failed to send OTP email.'
+                    'message' => 'Failed to send OTP email.',
                 ], 500);
             }
 
             return response()->json([
                 'status' => 'verify',
-                'message' => 'OTP sent for verification.',
-                'email' => $user->email
-            ]);
+                'message' => 'Please verify your email first. OTP sent.',
+                'email' => $user->email,
+            ], 200);
         }
 
-        // All checks passed, issue Sanctum token
-        $token = $user->createToken('user-login-token')->plainTextToken;
+        // If user has enabled 2FA (optional flag: $user->is_2fa_enabled)
+        if ($user->is_2fa_enabled ?? false) {
+            $otp = rand(100000, 999999);
+            $user->otp = $otp;
+            $user->otp_expires_at = now()->addMinutes(10);
+            $user->save();
+
+            try {
+                Mail::to($user->email)->send(new UserOtpMail([
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'gender' => $user->gender,
+                    'dob' => $user->dob,
+                ], $otp));
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Failed to send 2FA OTP.',
+                ], 500);
+            }
+
+            return response()->json([
+                'status' => 'verify_2fa',
+                'message' => '2FA is enabled. OTP sent.',
+                'email' => $user->email,
+            ], 200);
+        }
+
+        // ✅ All good – create Sanctum token
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'status' => true,
             'message' => 'Login successful.',
             'token' => $token,
-            'user' => $user
-        ]);
+            'user' => $user,
+        ], 200);
     }
 
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Logged out successfully.'
+        ]);
+    }
 
 }
