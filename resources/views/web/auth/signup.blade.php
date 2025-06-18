@@ -32,7 +32,7 @@
                 <span>Or</span>
             </div>
 
-            <form id="signupForm" method="POST" action="{{ route('user.signup.post') }}" enctype="multipart/form-data">
+            <form id="signupForm" method="POST" action="{{ route('api.signup') }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -125,7 +125,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '{{ route("user.signup.post") }}',
+                    url: '{{ route("api.signup") }}',
                     type: 'POST',
                     data: formData,
                     processData: false,

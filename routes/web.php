@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\API\DeviceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController as WebAuth;
 use App\Http\Controllers\Web\DashboardController as WebDashboard;

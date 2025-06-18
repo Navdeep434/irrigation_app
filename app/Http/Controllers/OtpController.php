@@ -34,21 +34,21 @@ class OtpController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'No unverified user found with this email.',
-            ]);
+            ], 404);
         }
 
         if ($request->otp != $user->otp) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid OTP.',
-            ]);
+            ], 401);
         }
 
         if ($user->otp_expires_at && now()->gt($user->otp_expires_at)) {
             return response()->json([
-                'status' => 'error',
+                'status' => false,
                 'message' => 'OTP has expired. Please request a new one.',
-            ]);
+            ], 410);
         }
 
         $user->is_verified = true;
@@ -72,9 +72,13 @@ class OtpController extends Controller
         }
 
         return response()->json([
-            'status' => 'success',
+            'status' => true,
             'message' => 'OTP verified successfully. UID sent to your email.',
-        ]);
+            'data' => [
+                'uid' => $uidData['uid'],
+                'name' => $user->first_name . ' ' . $user->last_name,
+            ]
+        ], 200);
     }
 
 
