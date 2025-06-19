@@ -17,30 +17,23 @@ class DashboardController extends Controller
         $lon = 77.2090;
         $apiKey = config('services.openweather.key');
 
-        $response = Http::get("https://api.openweathermap.org/data/2.5/onecall", [
+        $response = Http::get('https://api.openweathermap.org/data/2.5/weather', [
             'lat' => $lat,
             'lon' => $lon,
-            'exclude' => 'minutely,hourly,alerts',
             'units' => 'metric',
             'appid' => $apiKey,
         ]);
 
-        // dd($response->body());
-
-        $forecast = [];
+        $currentWeather = [];
 
         if ($response->successful()) {
-            $data = $response->json();
-            if (isset($data['daily'])) {
-                $forecast = collect($data['daily'])->take(6);
-            } else {
-                logger()->warning("OpenWeather response missing 'daily' key", ['response' => $data]);
-            }
+            $currentWeather = $response->json();
         } else {
             logger()->error("OpenWeather API request failed", ['response' => $response->body()]);
         }
 
-        return view('web.user-pages.dashboard', compact('user', 'forecast'));
+        return view('web.user-pages.dashboard', compact('user', 'currentWeather'));
     }
+
 
 }

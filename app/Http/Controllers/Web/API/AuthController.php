@@ -145,14 +145,11 @@ class AuthController extends Controller
             \Log::error('Failed to send UID email: ' . $e->getMessage());
         }
 
-        // ✅ Generate Sanctum token
-        $token = $user->createToken('user-auth-token')->plainTextToken;
 
         return response()->json([
             'status' => true,
             'message' => 'OTP verified successfully. UID sent to your email.',
             'data' => [
-                'token' => $token,
                 'uid' => $uidData['uid'],
                 'name' => $user->first_name . ' ' . $user->last_name,
             ]
@@ -181,7 +178,9 @@ class AuthController extends Controller
                 'message' => 'Unauthorized login.',
             ], 403);
         }
-
+                
+        // ✅ Generate Sanctum token
+        $token = $user->createToken('user-auth-token')->plainTextToken;
         if (!$user->is_verified) {
             $otp = $user->otp && $user->otp_expires_at > now()
                 ? $user->otp
@@ -210,6 +209,8 @@ class AuthController extends Controller
                 'status' => 'verify',
                 'message' => 'Please verify your email first. OTP sent.',
                 'email' => $user->email,
+                'token' => $token,
+                'user' => $user,
             ], 200);
         }
 

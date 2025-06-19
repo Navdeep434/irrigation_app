@@ -54,36 +54,35 @@
     
     <!-- Weather Forecast -->
     <div class="weather-section">
-        <h3><i class="fas fa-cloud-sun"></i> Weather Forecast</h3>
-        <div class="forecast-row d-flex flex-wrap gap-3">
-            @forelse ($forecast as $day)
-                <div class="forecast-item text-center p-3 border rounded shadow-sm">
-                    <div class="day fw-bold mb-2">
-                        {{ \Carbon\Carbon::createFromTimestamp($day['dt'])->isToday() ? 'Today' : \Carbon\Carbon::createFromTimestamp($day['dt'])->format('D') }}
-                    </div>
-                    <div class="weather-icon mb-2" style="font-size: 24px;">
-                        @php
-                            $weatherIcon = $day['weather'][0]['main'] ?? 'Clouds';
-                            $iconMap = [
-                                'Clear' => 'fa-sun',
-                                'Clouds' => 'fa-cloud',
-                                'Rain' => 'fa-cloud-showers-heavy',
-                                'Drizzle' => 'fa-cloud-rain',
-                                'Thunderstorm' => 'fa-bolt',
-                                'Snow' => 'fa-snowflake',
-                                'Mist' => 'fa-smog',
-                                'Fog' => 'fa-smog',
-                                'Haze' => 'fa-smog',
-                            ];
-                        @endphp
-                        <i class="fas {{ $iconMap[$weatherIcon] ?? 'fa-cloud' }}"></i>
-                    </div>
-                    <div class="temp fs-5">{{ round($day['temp']['day'] ?? 0) }}°C</div>
+        <h3><i class="fas fa-cloud-sun"></i> Current Weather</h3>
+        @if (!empty($currentWeather))
+            <div class="forecast-item text-center p-3 border rounded shadow-sm">
+                <div class="day fw-bold mb-2">
+                    {{ \Carbon\Carbon::now()->format('l') }}
                 </div>
-            @empty
-                <p class="text-muted">Weather forecast not available.</p>
-            @endforelse
-        </div>
+                <div class="weather-icon mb-2" style="font-size: 24px;">
+                    @php
+                        $weatherIcon = $currentWeather['weather'][0]['main'] ?? 'Clouds';
+                        $iconMap = [
+                            'Clear' => 'fa-sun',
+                            'Clouds' => 'fa-cloud',
+                            'Rain' => 'fa-cloud-showers-heavy',
+                            'Drizzle' => 'fa-cloud-rain',
+                            'Thunderstorm' => 'fa-bolt',
+                            'Snow' => 'fa-snowflake',
+                            'Mist' => 'fa-smog',
+                            'Fog' => 'fa-smog',
+                            'Haze' => 'fa-smog',
+                        ];
+                    @endphp
+                    <i class="fas {{ $iconMap[$weatherIcon] ?? 'fa-cloud' }}"></i>
+                </div>
+                <div class="temp fs-5">{{ round($currentWeather['main']['temp']) }}°C</div>
+                <div class="desc text-muted">{{ $currentWeather['weather'][0]['description'] }}</div>
+            </div>
+        @else
+            <p class="text-muted">Weather data not available.</p>
+        @endif
     </div>
 
 @endsection

@@ -72,7 +72,7 @@ class OtpController extends Controller
         }
 
         return response()->json([
-            'status' => true,
+            'status' => 'success',
             'message' => 'OTP verified successfully. UID sent to your email.',
             'data' => [
                 'uid' => $uidData['uid'],
