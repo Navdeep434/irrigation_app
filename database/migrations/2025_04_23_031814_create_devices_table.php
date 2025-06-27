@@ -33,7 +33,8 @@ return new class extends Migration
             $table->boolean('is_blocked')->default(false);
 
             $table->string('status')->default('inactive');
-
+            $table->timestamp('last_seen')->nullable();
+            $table->string('live_status')->default('offline');
             $table->timestamp('assigned_at')->nullable();
             $table->timestamp('unassigned_at')->nullable();
 

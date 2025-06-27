@@ -5,13 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('page-title', 'Dashboard | Smart Irrigation')</title>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="{{ asset('css/user/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/user/sidebar.css') }}" />
-
+    @stack('styles')
     <style>
         /* Sidebar toggle related CSS */
         .sidebar.collapsed {
@@ -33,6 +32,9 @@
             justify-content: center !important;
             padding: 15px 0 !important;
         }
+        .sidebar.collapsed .toggle-arrow {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -47,7 +49,7 @@
             <div class="user-info">
                 <div class="icon-circle me-3">
                     @if(auth()->user()->profile_image)
-                        <img src="{{ asset('storage/' . auth()->user()->profile_image) }}"
+                        <img src="{{ asset('storage/' . auth()->user()->profile_image) }}??NA"
                              alt="Profile Image"
                              class="rounded-circle"
                              style="width: 45px; height: 45px; object-fit: cover;">
@@ -74,11 +76,11 @@
                    aria-expanded="{{ request()->is('device*') || request()->is('history') || request()->is('my-device') ? 'true' : 'false' }}"
                    aria-controls="device">
                     <i class="fas fa-microchip"></i> <span>Devices</span>
-                    <i class="fas fa-chevron-down ms-auto"></i>
+                    <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                 </a>
 
                 <div class="collapse {{ request()->is('device*') || request()->is('history') || request()->is('my-device') ? 'show' : '' }}" id="device">
-                    <a href="" class="{{ request()->is('my-device') ? 'active' : '' }}">
+                    <a href="{{ route('my.devices') }}" class="{{ request()->is('my-device') ? 'active' : '' }}">
                         <i class="fas fa-hdd"></i> <span>My Devices</span>
                     </a>
                     <a href="{{ route('device.control') }}" class="{{ request()->is('device-control') ? 'active' : '' }}">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Device;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -12,6 +13,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $devices = Device::where('user_id', $user->id)->get();
 
         $lat = 28.6139;
         $lon = 77.2090;
@@ -32,7 +34,7 @@ class DashboardController extends Controller
             logger()->error("OpenWeather API request failed", ['response' => $response->body()]);
         }
 
-        return view('web.user-pages.dashboard', compact('user', 'currentWeather'));
+        return view('web.user-pages.dashboard', compact('user', 'currentWeather', 'devices'));
     }
 
 

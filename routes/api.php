@@ -6,9 +6,17 @@ use App\Http\Controllers\Admin\API\DeviceController as AdminApiDevice;
 use App\Http\Controllers\Web\API\AuthController as ApiAuthController;
 use App\Http\Controllers\Admin\API\AuthController as ApiAdminAuthController;
 use App\Http\Controllers\Admin\API\DashboardController as ApiAdminDashboardController;
+use App\Http\Controllers\Admin\API\DeviceController;
+use App\Http\Controllers\MQTTController;
+use App\Http\Controllers\Web\API\DeviceController as ApiDeviceController;
+use App\Http\Controllers\Web\API\ValveController;
+use App\Http\Controllers\Web\DeviceController as UserDeviceController;
 
 // Admin API Routes - Sanctum Auth + Role & Permission Based Access
 Route::post('/device/onboard', [AdminApiDevice::class, 'onboard']);
+Route::post('/device/control', [MQTTController::class, 'publishValveCommand']);
+Route::post('/device/health-report', [DeviceController::class, 'storeHardwareStatus']);
+
 
 
 
@@ -23,8 +31,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [ApiAuthController::class, 'logout']);
     Route::get('/profile', [ApiAuthController::class, 'profile']);
     Route::post('/update-password', [ApiAuthController::class, 'updatePassword']);
+    Route::post('/valve-control', [ValveController::class, 'control']);
 });
-
 
 
 
@@ -51,3 +59,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'auth:admin'
     });
     
 });
+
+// routes/api.php
+Route::post('/device/heartbeat', [ApiDeviceController::class, 'heartbeat']);
+
+
+Route::get('/device/status', [ApiDeviceController::class, 'getStatus']);
+Route::post('/device/data', [UserDeviceController::class, 'store']);
+
+Route::get('/device/{device_number}/latest-reading', [UserDeviceController::class, 'latest'])->name('api.device.latest-reading');
+

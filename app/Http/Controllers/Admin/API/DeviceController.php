@@ -7,6 +7,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\Device;
 use App\Models\User;
+use App\Models\HardwareStatus;
 
 class DeviceController extends Controller
 {
@@ -52,5 +53,25 @@ class DeviceController extends Controller
             ],
         ], 200);
     }
+
+    public function storeHardwareStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'device_number' => 'required|string|exists:devices,device_number',
+            'valves' => 'required|array',
+            'flow_sensors' => 'required|array',
+            'temperature_sensor' => 'required|boolean',
+        ]);
+
+        HardwareStatus::create([
+            'device_number' => $validated['device_number'],
+            'valves' => $validated['valves'],
+            'flow_sensors' => $validated['flow_sensors'],
+            'temperature_sensor' => $validated['temperature_sensor'],
+        ]);
+
+        return response()->json(['status' => 'Hardware status stored.']);
+    }
+
     
 }

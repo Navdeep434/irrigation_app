@@ -39,4 +39,13 @@ return [
         'key' => env('OPENWEATHER_API_KEY'),
     ],
 
+    'mqtt' => [
+        'host' => env('MQTT_HOST'),
+        'port' => env('MQTT_PORT', 1883),
+        'username' => env('MQTT_USERNAME'),
+        'password' => env('MQTT_PASSWORD'),
+    ],
+
+
+
 ];
