@@ -11,13 +11,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
-    use SoftDeletes,HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
-    // Optional: set deleted_at as a date field
     protected $dates = ['deleted_at'];
 
-    
     /**
      * The attributes that are mass assignable.
      *
@@ -36,8 +33,7 @@ class User extends Authenticatable
         'gender',
         'dob',
         'is_verified',
-        'role',
-        'profile_image',
+        'profile_image', // Removed 'role' if Spatie is handling it
     ];
 
     /**
@@ -64,20 +60,14 @@ class User extends Authenticatable
 
     /**
      * Scope a query to only include users with a specific status.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $status
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
     }
-    
+
     public function customer()
     {
         return $this->hasOne(Customer::class);
     }
-
-    
 }
